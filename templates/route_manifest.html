@@ -1,76 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Lulu Central Logistics Manifest</title>
     <style>
-      body {
-    font-family: Arial, sans-serif;
-    font-size: 10px;
-    margin: 10px;
-}
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            margin: 10px;
+        }
 
-.header {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
+        .header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto; /* Changed from fixed to auto */
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            /* Changed from fixed to auto */
+        }
 
-.manifest-info td,
-.items th,
-.items td {
-    border: 1px solid #ccc;
-    padding: 4px;
-    vertical-align: middle;
-    word-wrap: break-word; /* Added to prevent content overflow */
-    word-break: break-word; /* Added to break long words */
-}
+        .manifest-info td,
+        .items th,
+        .items td {
+            border: 1px solid #ccc;
+            padding: 4px;
+            vertical-align: middle;
+            word-wrap: break-word;
+            /* Added to prevent content overflow */
+            word-break: break-word;
+            /* Added to break long words */
+        }
 
-/* Remove border on manifest-info table headers */
-.manifest-info td {
-    border: none !important;
-}
+        /* Remove border on manifest-info table headers */
+        .manifest-info td {
+            border: none !important;
+        }
 
-.manifest-info td {
-    width: 25%;
-}
+        .manifest-info td {
+            width: 25%;
+        }
 
-.info-label {
-    font-weight: bold;
-}
+        .info-label {
+            font-weight: bold;
+        }
 
-.items th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    font-size: 10px;
-}
+        .items th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            font-size: 10px;
+        }
 
-.items td {
-    font-size: 9px;
-    max-width: 150px; /* Optional: limits column width to avoid overflow */
-    overflow: hidden; /* Prevents long text from overflowing */
-    text-overflow: ellipsis; /* Adds ellipsis (...) if text overflows */
-}
+        .items td {
+            font-size: 9px;
+            max-width: 150px;
+            /* Optional: limits column width to avoid overflow */
+            overflow: hidden;
+            /* Prevents long text from overflowing */
+            text-overflow: ellipsis;
+            /* Adds ellipsis (...) if text overflows */
+        }
 
-/* Add styles to the table to handle large content */
-.items td {
-    word-wrap: break-word;
-    word-break: break-all;
-}
+        /* Add styles to the table to handle large content */
+        .items td {
+            word-wrap: break-word;
+            word-break: break-all;
+        }
 
+        .hover-highlight a {
+            text-decoration: none;
+            color: #000;
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .hover-highlight a:hover {
+            background-color: #dee981;
+            /* Light blue on hover */
+        }
     </style>
-    
-    
 </head>
-<body>
 
+<body>
     <div class="header">Lulu Central Logistics</div>
 
     <table class="manifest-info">
@@ -118,7 +135,7 @@ table {
         </tr>
     </table>
 
-    <br>
+    <br />
 
     <table class="items">
         <thead>
@@ -153,7 +170,11 @@ table {
                 <td>{{ item.customer_name }}</td>
                 <td>{{ item.contact_number }}</td>
                 <td>{{ item.store_code }}</td>
-                <td>{{ item.address }}</td>
+                <td class="hover-highlight">
+                    <a href="{{ item.map_link }}" target="_blank">
+                        {{ item.address }}
+                    </a>
+                </td>
                 <td>{{ item.pincode }}</td>
                 <td>N/A</td>
                 <td>{{ status }}</td>
@@ -162,6 +183,6 @@ table {
             {% endfor %}
         </tbody>
     </table>
-
 </body>
+
 </html>
