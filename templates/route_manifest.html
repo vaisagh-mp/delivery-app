@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lulu Central Logistics Manifest</title>
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    margin: 10px;
+}
+
+.header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Changed from fixed to auto */
+}
+
+.manifest-info td,
+.items th,
+.items td {
+    border: 1px solid #ccc;
+    padding: 4px;
+    vertical-align: middle;
+    word-wrap: break-word; /* Added to prevent content overflow */
+    word-break: break-word; /* Added to break long words */
+}
+
+/* Remove border on manifest-info table headers */
+.manifest-info td {
+    border: none !important;
+}
+
+.manifest-info td {
+    width: 25%;
+}
+
+.info-label {
+    font-weight: bold;
+}
+
+.items th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.items td {
+    font-size: 9px;
+    max-width: 150px; /* Optional: limits column width to avoid overflow */
+    overflow: hidden; /* Prevents long text from overflowing */
+    text-overflow: ellipsis; /* Adds ellipsis (...) if text overflows */
+}
+
+/* Add styles to the table to handle large content */
+.items td {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+    </style>
+    
+    
+</head>
+<body>
+
+    <div class="header">Lulu Central Logistics</div>
+
+    <table class="manifest-info">
+        <tr>
+            <td class="info-label">Manifest Number:</td>
+            <td>#{{ manifest_number }}</td>
+            <td class="info-label">Driver Name:</td>
+            <td>{{ driver_name }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Priority:</td>
+            <td>{{ priority }}</td>
+            <td class="info-label">Contact Number:</td>
+            <td>{{ contact_number }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Route:</td>
+            <td>{{ route }}</td>
+            <td class="info-label">Vehicle No:</td>
+            <td>{{ vehicle_no }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Total Ride:</td>
+            <td>{{ total_ride }} km</td>
+            <td class="info-label">Vehicle Type:</td>
+            <td>{{ vehicle_type }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Invoice Count:</td>
+            <td>{{ invoice_count }}</td>
+            <td class="info-label">Created Date:</td>
+            <td>{{ created_date }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Items Count:</td>
+            <td>{{ items_count }}</td>
+            <td class="info-label">Delivery Date:</td>
+            <td>{{ delivery_date }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Status:</td>
+            <td>{{ status }}</td>
+            <td class="info-label">Stage:</td>
+            <td>{{ stage }}</td>
+        </tr>
+    </table>
+
+    <br>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Invoice No.</th>
+                <th>Invoice Date</th>
+                <th>Delivery No.</th>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>STO No.</th>
+                <th>Qty</th>
+                <th>Customer Name</th>
+                <th>Customer Number</th>
+                <th>Store Code</th>
+                <th>Address</th>
+                <th>Pin Code</th>
+                <th>E-Way Bill</th>
+                <th>Status</th>
+                <th>Stage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.invoice_no }}</td>
+                <td>{{ item.invoice_date }}</td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.product_code }}</td>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.sto_no }}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ item.customer_name }}</td>
+                <td>{{ item.contact_number }}</td>
+                <td>{{ item.store_code }}</td>
+                <td>{{ item.address }}</td>
+                <td>{{ item.pincode }}</td>
+                <td>N/A</td>
+                <td>{{ status }}</td>
+                <td>{{ stage }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

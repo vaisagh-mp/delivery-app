@@ -24,7 +24,6 @@ class CustomerAddress(models.Model):
 
 class OptimizedRoute(models.Model):
     office_address = models.CharField(max_length=255)
-    # Use a ManyToManyField to relate CustomerAddress objects
     delivery_addresses = models.ManyToManyField(CustomerAddress)
     route_data = models.JSONField()  # Stores the full response from Google Directions API
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,11 +1,17 @@
 from rest_framework.views import APIView
 import pandas as pd
+from datetime import datetime
+import io
+from weasyprint import HTML
+from xhtml2pdf import pisa
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status, generics
-from .models import CustomerAddress, OptimizedRoute
+from .models import CustomerAddress
 from .serializers import CustomerAddressSerializer, ExcelUploadSerializer
-from .utils import get_lat_lon, get_optimized_route
-from geopy.distance import geodesic
+
+
 
 class CustomerAddressListView(generics.ListAPIView):
     queryset = CustomerAddress.objects.all()
@@ -57,3 +63,70 @@ class CustomerAddressUploadView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# class GenerateRoutePDFView(APIView):
+#     def post(self, request):
+#         data = request.data
+
+#         context = {
+#             "manifest_number": f"M6-{datetime.now().strftime('%H%M%S')}",
+#             "priority": data.get("priority", 0),
+#             "route": data.get("route_name", "N/A"),
+#             "total_ride": data.get("total_km", 0),
+#             "invoice_count": data.get("invoice_count", 0),
+#             "items_count": data.get("items_count", 0),
+#             "status": data.get("status", "Scheduled"),
+#             "stage": data.get("stage", "Order"),
+#             "driver_name": data.get("driver_name", "N/A"),
+#             "contact_number": data.get("contact_number", "N/A"),
+#             "vehicle_no": data.get("vehicle_no", "N/A"),
+#             "vehicle_type": data.get("vehicle_type", "N/A"),
+#             "created_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+#             "delivery_date": data.get("delivery_date", datetime.now().strftime('%d-%m-%Y')),
+#             "items": data.get("stops", []),
+#         }
+
+#         html = render_to_string("route_manifest.html", context)
+#         result = io.BytesIO()
+#         pisa_status = pisa.CreatePDF(html, dest=result)
+
+#         if pisa_status.err:
+#             return Response({"error": "Error generating PDF"}, status=500)
+
+#         result.seek(0)
+#         response = HttpResponse(result, content_type='application/pdf')
+#         response['Content-Disposition'] = 'attachment; filename="manifest.pdf"'
+#         return response
+         
+
+class GenerateRoutePDFView(APIView):
+    def post(self, request):
+        data = request.data
+
+        context = {
+            "manifest_number": f"M6-{datetime.now().strftime('%H%M%S')}",
+            "priority": data.get("priority", 0),
+            "route": data.get("route_name", "N/A"),
+            "total_ride": data.get("total_km", 0),
+            "invoice_count": data.get("invoice_count", 0),
+            "items_count": data.get("items_count", 0),
+            "status": data.get("status", "Scheduled"),
+            "stage": data.get("stage", "Order"),
+            "driver_name": data.get("driver_name", "N/A"),
+            "contact_number": data.get("contact_number", "N/A"),
+            "vehicle_no": data.get("vehicle_no", "N/A"),
+            "vehicle_type": data.get("vehicle_type", "N/A"),
+            "created_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "delivery_date": data.get("delivery_date", datetime.now().strftime('%d-%m-%Y')),
+            "items": data.get("stops", []),
+        }
+
+        html_string = render_to_string("route_manifest.html", context)
+        pdf_file = io.BytesIO()
+
+        HTML(string=html_string).write_pdf(target=pdf_file)
+
+        pdf_file.seek(0)
+        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="manifest.pdf"'
+        return response

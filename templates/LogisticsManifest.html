@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lulu Central Logistics Manifest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            font-size: 12px;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .manifest-info {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .manifest-info td {
+            padding: 5px;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.items th,
+        table.items td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: left;
+            font-size: 10px;
+        }
+
+        table.items th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Lulu Central Logistics</div>
+
+    <table class="manifest-info">
+        <tr>
+            <td width="20%" class="info-label">Manifest Number:</td>
+            <td width="30%">{{ manifest_number }}</td>
+            <td width="20%" class="info-label">Driver Name:</td>
+            <td width="30%">N/A</td>
+        </tr>
+        <tr>
+            <td class="info-label">Priority:</td>
+            <td>0</td>
+            <td class="info-label">Contact Number:</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="info-label">Route:</td>
+            <td>{{ route }}</td>
+            <td class="info-label">Vehicle No:</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="info-label">Total Ride:</td>
+            <td>{{ total_ride }} km</td>
+            <td class="info-label">Vehicle Type:</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="info-label">Invoice Count:</td>
+            <td>{{ invoice_count }}</td>
+            <td class="info-label">Created Date:</td>
+            <td>{{ created_date }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Items Count:</td>
+            <td>{{ items_count }}</td>
+            <td class="info-label">Delivery Date:</td>
+            <td>{{ delivery_date }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Status:</td>
+            <td>{{ status }}</td>
+            <td class="info-label"></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Invoice No.</th>
+                <th>Invoice Date</th>
+                <th>Delivery No.</th>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>STO No.</th>
+                <th>Qty</th>
+                <th>Customer Name</th>
+                <th>Customer Number</th>
+                <th>Store Code</th>
+                <th>Address</th>
+                <th>Pin Code</th>
+                <th>E-Way Bill</th>
+                <th>Status</th>
+                <th>Stage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.invoice_no }}</td>
+                <td>{{ item.invoice_date }}</td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.product_code }}</td>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.sto_no }}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ item.customer_name }}</td>
+                <td>{{ item.contact_number }}</td>
+                <td>{{ item.store_code }}</td>
+                <td>{{ item.address }}</td>
+                <td>{{ item.pincode }}</td>
+                <td>N/A</td>
+                <td>{{ status }}</td>
+                <td>{{ stage }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>
