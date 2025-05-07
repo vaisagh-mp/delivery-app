@@ -27,6 +27,9 @@ class CustomerAddressUploadView(APIView):
                 df = pd.read_excel(excel_file)
                 df.columns = df.columns.str.strip()  # Clean column names
 
+                # Delete all existing data before inserting new rows
+                CustomerAddress.objects.all().delete()
+
                 for _, row in df.iterrows():
                     customer_name = str(row.get("Unnamed: 12", "")).strip()
                     address = str(row.get("Unnamed: 13", "")).strip()
@@ -34,7 +37,7 @@ class CustomerAddressUploadView(APIView):
                     alt_contact_no = str(row.get("Unnamed: 15", "")).strip()
                     pincode = str(row.get("Unnamed: 16", "")).strip()
 
-                    # Skip row if it's a placeholder or header
+                    # Skip placeholder/header rows
                     if (
                         customer_name.lower() == "customer" and
                         address.lower() == "address" and
@@ -44,7 +47,7 @@ class CustomerAddressUploadView(APIView):
                     ):
                         continue
 
-                    # You can also skip empty rows if needed
+                    # Skip empty rows
                     if not any([customer_name, address, contact_no, pincode]):
                         continue
 
@@ -56,12 +59,13 @@ class CustomerAddressUploadView(APIView):
                         pincode=pincode
                     )
 
-                return Response({"message": "Addresses uploaded successfully."}, status=status.HTTP_201_CREATED)
+                return Response({"message": "Addresses replaced successfully."}, status=status.HTTP_201_CREATED)
 
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # class GenerateRoutePDFView(APIView):
