@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <title>Lulu Central Logistics Manifest</title>
     <style>
+         @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
         body {
             font-family: Arial, sans-serif;
             font-size: 10px;
@@ -98,41 +102,30 @@
             <td>{{ driver_name }}</td>
         </tr>
         <tr>
-            <td class="info-label">Priority:</td>
-            <td>{{ priority }}</td>
+            <td class="info-label">Route:</td>
+            <td>{{ route }} ({{total_km}}km)</td>
             <td class="info-label">Contact Number:</td>
             <td>{{ contact_number }}</td>
         </tr>
         <tr>
-            <td class="info-label">Route:</td>
-            <td>{{ route }}</td>
-            <td class="info-label">Vehicle No:</td>
+            <td class="info-label">Total Invoice:</td>
+            <td>{{ invoice_count }}</td>
+            <td class="info-label">Vehicle Registration No:</td>
             <td>{{ vehicle_no }}</td>
         </tr>
         <tr>
-            <td class="info-label">Total Ride:</td>
-            <td>{{ total_ride }} km</td>
-            <td class="info-label">Vehicle Type:</td>
-            <td>{{ vehicle_type }}</td>
+            <td class="info-label">Total Quantity:</td>
+            <td>{{ items_count }}</td>
+            <td class="info-label">Truck Number:</td>
+            <td>{{ truck_number }}</td>
         </tr>
         <tr>
-            <td class="info-label">Invoice Count:</td>
-            <td>{{ invoice_count }}</td>
             <td class="info-label">Created Date:</td>
             <td>{{ created_date }}</td>
-        </tr>
-        <tr>
-            <td class="info-label">Items Count:</td>
-            <td>{{ items_count }}</td>
             <td class="info-label">Delivery Date:</td>
             <td>{{ delivery_date }}</td>
         </tr>
-        <tr>
-            <td class="info-label">Status:</td>
-            <td>{{ status }}</td>
-            <td class="info-label">Stage:</td>
-            <td>{{ stage }}</td>
-        </tr>
+        
     </table>
 
     <br />
@@ -143,7 +136,7 @@
                 <th>Invoice No.</th>
                 <th>Invoice Date</th>
                 <th>Delivery No.</th>
-                <th>Product Code</th>
+                <th>Article</th>
                 <th>Product Name</th>
                 <th>STO No.</th>
                 <th>Qty</th>
@@ -152,9 +145,6 @@
                 <th>Store Code</th>
                 <th>Address</th>
                 <th>Pin Code</th>
-                <th>E-Way Bill</th>
-                <th>Status</th>
-                <th>Stage</th>
             </tr>
         </thead>
         <tbody>
@@ -163,7 +153,7 @@
                 <td>{{ item.invoice_no }}</td>
                 <td>{{ item.invoice_date }}</td>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ item.product_code }}</td>
+                <td>{{ item.article }}</td>
                 <td>{{ item.product_name }}</td>
                 <td>{{ item.sto_no }}</td>
                 <td>{{ item.qty }}</td>
@@ -176,9 +166,6 @@
                     </a>
                 </td>
                 <td>{{ item.pincode }}</td>
-                <td>N/A</td>
-                <td>{{ status }}</td>
-                <td>{{ stage }}</td>
             </tr>
             {% endfor %}
         </tbody>

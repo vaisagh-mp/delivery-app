@@ -65,42 +65,6 @@ class CustomerAddressUploadView(APIView):
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-# class GenerateRoutePDFView(APIView):
-#     def post(self, request):
-#         data = request.data
-
-#         context = {
-#             "manifest_number": f"M6-{datetime.now().strftime('%H%M%S')}",
-#             "priority": data.get("priority", 0),
-#             "route": data.get("route_name", "N/A"),
-#             "total_ride": data.get("total_km", 0),
-#             "invoice_count": data.get("invoice_count", 0),
-#             "items_count": data.get("items_count", 0),
-#             "status": data.get("status", "Scheduled"),
-#             "stage": data.get("stage", "Order"),
-#             "driver_name": data.get("driver_name", "N/A"),
-#             "contact_number": data.get("contact_number", "N/A"),
-#             "vehicle_no": data.get("vehicle_no", "N/A"),
-#             "vehicle_type": data.get("vehicle_type", "N/A"),
-#             "created_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-#             "delivery_date": data.get("delivery_date", datetime.now().strftime('%d-%m-%Y')),
-#             "items": data.get("stops", []),
-#         }
-
-#         html = render_to_string("route_manifest.html", context)
-#         result = io.BytesIO()
-#         pisa_status = pisa.CreatePDF(html, dest=result)
-
-#         if pisa_status.err:
-#             return Response({"error": "Error generating PDF"}, status=500)
-
-#         result.seek(0)
-#         response = HttpResponse(result, content_type='application/pdf')
-#         response['Content-Disposition'] = 'attachment; filename="manifest.pdf"'
-#         return response
          
 
 class GenerateRoutePDFView(APIView):
@@ -109,17 +73,14 @@ class GenerateRoutePDFView(APIView):
 
         context = {
             "manifest_number": f"M6-{datetime.now().strftime('%H%M%S')}",
-            "priority": data.get("priority", 0),
-            "route": data.get("route_name", "N/A"),
-            "total_ride": data.get("total_km", 0),
-            "invoice_count": data.get("invoice_count", 0),
-            "items_count": data.get("items_count", 0),
-            "status": data.get("status", "Scheduled"),
-            "stage": data.get("stage", "Order"),
             "driver_name": data.get("driver_name", "N/A"),
+            "route": data.get("route_name", "N/A"),
+            "total_km": data.get("total_km", 0),
             "contact_number": data.get("contact_number", "N/A"),
+            "invoice_count": data.get("invoice_count", 0),
             "vehicle_no": data.get("vehicle_no", "N/A"),
-            "vehicle_type": data.get("vehicle_type", "N/A"),
+            "items_count": data.get("items_count", 0),
+            "truck_number": data.get("truck_number", "N/A"),
             "created_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "delivery_date": data.get("delivery_date", datetime.now().strftime('%d-%m-%Y')),
             "items": data.get("stops", []),
