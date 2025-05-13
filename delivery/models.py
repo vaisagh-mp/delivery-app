@@ -3,6 +3,10 @@ from .utils import get_lat_lon  # Import your geocoding utility
 
 class CustomerAddress(models.Model):
     customer_name = models.CharField(max_length=255, blank=True, null=True)
+    product_name = models.CharField(max_length=255, blank=True, null=True)
+    brand = models.CharField(max_length=255, blank=True, null=True)
+    article = models.CharField(max_length=10, blank=True, null=True)
+    Qty = models.CharField(max_length=3, blank=True, null=True)
     address = models.CharField(max_length=255)
     contact_no = models.CharField(max_length=20, blank=True, null=True)
     alt_contact_no = models.CharField(max_length=20, blank=True, null=True)

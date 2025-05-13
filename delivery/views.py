@@ -31,27 +31,30 @@ class CustomerAddressUploadView(APIView):
                 CustomerAddress.objects.all().delete()
 
                 for _, row in df.iterrows():
+                    brand = str(row.get("Unnamed: 6", "")).strip()
+                    article = str(row.get("Unnamed: 7", "")).strip()
+                    product_name = str(row.get("Unnamed: 8", "")).strip()
+                    Qty = str(row.get("Unnamed: 10", "")).strip()
                     customer_name = str(row.get("Unnamed: 12", "")).strip()
                     address = str(row.get("Unnamed: 13", "")).strip()
                     contact_no = str(row.get("Unnamed: 14", "")).strip()
                     alt_contact_no = str(row.get("Unnamed: 15", "")).strip()
                     pincode = str(row.get("Unnamed: 16", "")).strip()
 
-                    # Skip placeholder/header rows
-                    if (
-                        customer_name.lower() == "customer" and
-                        address.lower() == "address" and
-                        contact_no.lower() == "contact no." and
-                        alt_contact_no.lower() == "alt. contact no." and
-                        pincode.lower() == "pincode"
-                    ):
+                    # Skip header rows
+                    header_values = ["brand", "article", "item_desc", "Qty", "customer", "address", "contact no.", "alt. contact no.", "pincode"]
+                    if any(val.strip().lower() in header_values for val in [brand, article, product_name, Qty, customer_name, address, contact_no, alt_contact_no, pincode]):
                         continue
-
+                    
                     # Skip empty rows
-                    if not any([customer_name, address, contact_no, pincode]):
+                    if not any([brand, article, product_name, Qty, customer_name, address, contact_no, pincode]):
                         continue
-
+                    
                     CustomerAddress.objects.create(
+                        brand=brand,
+                        article=article,
+                        Qty=Qty,
+                        product_name=product_name,
                         customer_name=customer_name,
                         address=address,
                         contact_no=contact_no,
