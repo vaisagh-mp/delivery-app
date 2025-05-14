@@ -1,7 +1,14 @@
 from django.db import models
-from .utils import get_lat_lon  # Import your geocoding utility
+from .utils import get_lat_lon
+from django.utils import timezone
+
 
 class CustomerAddress(models.Model):
+    invoice_date = models.DateTimeField(default=timezone.now)
+    invoice_no=models.CharField(max_length=20, blank=True, null=True)
+    ref_no=models.CharField(max_length=20, blank=True, null=True)
+    store_code=models.CharField(max_length=20, blank=True, null=True)
+    sto_no=models.CharField(max_length=20, blank=True, null=True)
     customer_name = models.CharField(max_length=255, blank=True, null=True)
     product_name = models.CharField(max_length=255, blank=True, null=True)
     brand = models.CharField(max_length=255, blank=True, null=True)

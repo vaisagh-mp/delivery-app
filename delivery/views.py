@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 import pandas as pd
 from datetime import datetime
 import io
+from django.utils import timezone
 from weasyprint import HTML
 from xhtml2pdf import pisa
 from django.template.loader import render_to_string
@@ -25,12 +26,37 @@ class CustomerAddressUploadView(APIView):
             excel_file = request.FILES['file']
             try:
                 df = pd.read_excel(excel_file)
-                df.columns = df.columns.str.strip()  # Clean column names
+                df.columns = df.columns.str.strip()
 
-                # Delete all existing data before inserting new rows
                 CustomerAddress.objects.all().delete()
 
                 for _, row in df.iterrows():
+                    raw_date = row.get("Unnamed: 1", "")
+                    invoice_date = None
+
+                    # Skip if header row
+                    if str(raw_date).strip().lower() in ["invoice date", ""]:
+                        continue
+
+                    # Parse invoice_date
+                    if isinstance(raw_date, datetime):
+                        invoice_date = raw_date
+                    else:
+                        try:
+                            invoice_date = timezone.make_aware(datetime.strptime(str(raw_date).strip(), "%d/%m/%Y %H:%M:%S"))
+                        except ValueError:
+                            try:
+                                invoice_date = timezone.make_aware(datetime.strptime(str(raw_date).strip(), "%d/%m/%Y"))
+                            except ValueError:
+                                return Response(
+                                    {"error": f"Invalid date format: {raw_date}"},
+                                    status=status.HTTP_400_BAD_REQUEST
+                                )
+
+                    invoice_no = str(row.get("Unnamed: 2", "")).strip()
+                    ref_no = str(row.get("Unnamed: 3", "")).strip()
+                    store_code = str(row.get("Unnamed: 4", "")).strip()
+                    sto_no = str(row.get("Unnamed: 9", "")).strip()
                     brand = str(row.get("Unnamed: 6", "")).strip()
                     article = str(row.get("Unnamed: 7", "")).strip()
                     product_name = str(row.get("Unnamed: 8", "")).strip()
@@ -41,16 +67,21 @@ class CustomerAddressUploadView(APIView):
                     alt_contact_no = str(row.get("Unnamed: 15", "")).strip()
                     pincode = str(row.get("Unnamed: 16", "")).strip()
 
-                    # Skip header rows
-                    header_values = ["brand", "article", "item_desc", "Qty", "customer", "address", "contact no.", "alt. contact no.", "pincode"]
-                    if any(val.strip().lower() in header_values for val in [brand, article, product_name, Qty, customer_name, address, contact_no, alt_contact_no, pincode]):
+                    # Skip header rows accidentally interpreted as data
+                    header_values = ["invoice_no", "ref_no", "store_code", "sto_no", "brand", "article", "item_desc", "Qty", "customer", "address", "contact no.", "alt. contact no.", "pincode"]
+                    if any(val.strip().lower() in header_values for val in [invoice_no, ref_no, store_code, sto_no, brand, article, product_name, Qty, customer_name, address, contact_no, alt_contact_no, pincode]):
                         continue
-                    
+
                     # Skip empty rows
-                    if not any([brand, article, product_name, Qty, customer_name, address, contact_no, pincode]):
+                    if not any([invoice_no, ref_no, store_code, sto_no, brand, article, product_name, Qty, customer_name, address, contact_no, pincode]):
                         continue
-                    
+
                     CustomerAddress.objects.create(
+                        invoice_date=invoice_date,
+                        invoice_no=invoice_no,
+                        ref_no=ref_no,
+                        store_code=store_code,
+                        sto_no=sto_no,
                         brand=brand,
                         article=article,
                         Qty=Qty,
